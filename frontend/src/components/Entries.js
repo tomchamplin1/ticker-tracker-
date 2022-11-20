@@ -7,7 +7,8 @@ import { Button, Form, Modal, Container } from "react-bootstrap";
 const Entries = () => {
   const [entries, setEntries] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
-  const [changeEntry, setChangeEntry] = useState({ change: false, id: 0 });
+  const [changeEntry, setChangeEntry] = useState(false);
+  const [changeId, setChangeId] = useState("");
   const [changeIngredient, setChangeIngredient] = useState({
     change: false,
     id: 0,
@@ -62,6 +63,24 @@ const Entries = () => {
                     <td class="py-4 px-6"> ${entry.price}</td>
                     <td class="py-4 px-6"> {entry.company}</td>
                     <td class="py-4 px-6">
+                      <button
+                        onClick={() => {
+                          setChangeEntry(true);
+                          setChangeId(entry.stockid);
+                          console.log(changeId);
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="mr-2 bi bi-pencil"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                        </svg>
+                      </button>
                       <button onClick={() => deleteSingleEntry(entry.stockid)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -80,124 +99,100 @@ const Entries = () => {
                       </button>
                     </td>
                   </tr>
+                  <Modal
+                    show={changeEntry}
+                    onHide={() => setChangeEntry(false)}
+                    centered
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>Edit Stock</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <Form.Group>
+                        <div>
+                          <label
+                            for="name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Name
+                          </label>
+                          <input
+                            onChange={(event) => {
+                              newEntry.name = event.target.value;
+                            }}
+                            type="name"
+                            name="name"
+                            id="name"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            placeholder="AMZN"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label
+                            for="name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Price
+                          </label>
+                          <input
+                            onChange={(event) => {
+                              newEntry.price = event.target.value;
+                            }}
+                            type="number"
+                            name="price"
+                            id="price"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            placeholder="$200"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label
+                            for="name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Company
+                          </label>
+                          <input
+                            onChange={(event) => {
+                              newEntry.company = event.target.value;
+                            }}
+                            name="company"
+                            id="company"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            placeholder="Amazon"
+                            required
+                          />
+                        </div>
+                      </Form.Group>
+                      <button
+                        onClick={() => changeSingleEntry(changeId)}
+                        type="submit"
+                        class="mt-3 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      >
+                        Edit Stock
+                      </button>
+                      <button
+                        onClick={() => setChangeEntry(false)}
+                        type="submit"
+                        class="mt-3 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      >
+                        Cancel
+                      </button>
+                    </Modal.Body>
+                  </Modal>
                 </tbody>
               ))}
             <button
               class="mt-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center"
               type="button"
               data-modal-toggle="authentication-modal"
+              onClick={() => setAddNewEntry(true)}
             >
               Add +
             </button>
-
-            <div
-              id="authentication-modal"
-              tabindex="-1"
-              aria-hidden="true"
-              class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 p-4 w-full md:inset-0 h-modal md:h-full"
-            >
-              <div class="relative w-full max-w-md h-full md:h-auto">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                  <button
-                    type="button"
-                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                    data-modal-toggle="authentication-modal"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                  </button>
-                  <div class="py-6 px-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                      Add Stock
-                    </h3>
-                    <form class="space-y-6" action="#">
-                      <div>
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Name
-                        </label>
-                        <input
-                          onChange={(event) => {
-                            newEntry.name = event.target.value;
-                          }}
-                          type="name"
-                          name="name"
-                          id="name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                          placeholder="AMZN"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Price
-                        </label>
-                        <input
-                          onChange={(event) => {
-                            newEntry.price = event.target.value;
-                          }}
-                          type="number"
-                          name="price"
-                          id="price"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                          placeholder="$200"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Company
-                        </label>
-                        <input
-                          onChange={(event) => {
-                            newEntry.company = event.target.value;
-                          }}
-                          name="company"
-                          id="company"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                          placeholder="Amazon"
-                          required
-                        />
-                      </div>
-                      <button
-                        onClick={() => addSingleEntry()}
-                        type="submit"
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        Add Stock
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
           </table>
-
-          <Container>
-            <Button class="text-3xl pl-16" onClick={() => setAddNewEntry(true)}>
-              Track today's calories
-            </Button>
-          </Container>
 
           <Modal
             show={addNewEntry}
@@ -205,106 +200,81 @@ const Entries = () => {
             centered
           >
             <Modal.Header closeButton>
-              <Modal.Title>Add Calorie Entry</Modal.Title>
+              <Modal.Title>Add Stock</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
-                <Form.Label>Dish</Form.Label>
-                <Form.Control
-                  onChange={(event) => {
-                    newEntry.dish = event.target.value;
-                  }}
-                ></Form.Control>
-                <Form.Label>Ingredients</Form.Label>
-                <Form.Control
-                  onChange={(event) => {
-                    newEntry.ingredients = event.target.value;
-                  }}
-                ></Form.Control>
-                <Form.Label>Calories</Form.Label>
-                <Form.Control
-                  onChange={(event) => {
-                    newEntry.calories = event.target.value;
-                  }}
-                ></Form.Control>
-                <Form.Label>Fat</Form.Label>
-                <Form.Control
-                  type="number"
-                  onChange={(event) => {
-                    newEntry.fat = event.target.value;
-                  }}
-                ></Form.Control>
+                <div>
+                  <label
+                    for="name"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Name
+                  </label>
+                  <input
+                    onChange={(event) => {
+                      newEntry.name = event.target.value;
+                    }}
+                    type="name"
+                    name="name"
+                    id="name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="AMZN"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="name"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Price
+                  </label>
+                  <input
+                    onChange={(event) => {
+                      newEntry.price = event.target.value;
+                    }}
+                    type="number"
+                    name="price"
+                    id="price"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="$200"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="name"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Company
+                  </label>
+                  <input
+                    onChange={(event) => {
+                      newEntry.company = event.target.value;
+                    }}
+                    name="company"
+                    id="company"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="Amazon"
+                    required
+                  />
+                </div>
               </Form.Group>
-              <Button onClick={() => addSingleEntry()}>Add</Button>
-              <Button onClick={() => setAddNewEntry(false)}>Cancel</Button>
-            </Modal.Body>
-          </Modal>
-
-          <Modal
-            show={changeIngredient.change}
-            onHide={() => setChangeIngredient({ change: false, id: 0 })}
-            centered
-          ></Modal>
-          <Modal.Header closeButton>
-            <Modal.Title>Change Ingredients</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group>
-              <Form.Label>New Ingredients</Form.Label>
-              <Form.Control
-                onChange={(event) => {
-                  setNewIngredientName(event.target.value);
-                }}
-              ></Form.Control>
-            </Form.Group>
-            <Button onClick={() => changeIngredientForEntry()}>Change</Button>
-            <Button
-              onClick={() => setChangeIngredient({ change: false, id: 0 })}
-            >
-              Cancel
-            </Button>
-          </Modal.Body>
-
-          <Modal
-            show={changeEntry.change}
-            onHide={() => setChangeEntry({ change: false, id: 0 })}
-            centered
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Change Entry</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form.Group>
-                <Form.Label>Dish</Form.Label>
-                <Form.Control
-                  onChange={(event) => {
-                    newEntry.dish = event.target.value;
-                  }}
-                ></Form.Control>
-                <Form.Label>Ingredients</Form.Label>
-                <Form.Control
-                  onChange={(event) => {
-                    newEntry.ingredients = event.target.value;
-                  }}
-                ></Form.Control>
-                <Form.Label>Calories</Form.Label>
-                <Form.Control
-                  onChange={(event) => {
-                    newEntry.calories = event.target.value;
-                  }}
-                ></Form.Control>
-                <Form.Label>Fat</Form.Label>
-                <Form.Control
-                  type="number"
-                  onChange={(event) => {
-                    newEntry.fat = event.target.value;
-                  }}
-                ></Form.Control>
-              </Form.Group>
-              <Button onClick={() => changeSingleEntry()}>Change</Button>
-              <Button onClick={() => setChangeEntry({ change: false, id: 0 })}>
+              <button
+                onClick={() => addSingleEntry()}
+                type="submit"
+                class="mt-3 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Add Stock
+              </button>
+              <button
+                onClick={() => setAddNewEntry(false)}
+                type="submit"
+                class="mt-3 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
                 Cancel
-              </Button>
+              </button>
             </Modal.Body>
           </Modal>
         </div>
@@ -327,14 +297,21 @@ const Entries = () => {
       });
   }
 
-  function changeSingleEntry() {
-    changeEntry.change = false;
-    var url = "http://localhost:8080/api/newstock/";
-    axios.put(url, newEntry).then((response) => {
-      if (response.status === 200) {
-        setRefreshData(true);
-      }
-    });
+  function changeSingleEntry(changeId) {
+    setChangeEntry(false);
+    var url = "http://localhost:8080/api/stock/" + changeId;
+    axios
+      .put(url, {
+        name: newEntry.name,
+        price: parseFloat(newEntry.price),
+        company: newEntry.company,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setRefreshData(true);
+          setChangeId("");
+        }
+      });
   }
 
   function addSingleEntry() {
